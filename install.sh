@@ -30,7 +30,7 @@ download_burpsuite() {
 
 download_loader_jar() {
     print_status "Downloading the latest Burp Loader Key Generator..."
-    sudo wget "$LOADER_JAR_URL" -O "$BURP_DIR/BurpLoaderKeyGen.jar" || error_status "Failed to download BurpLoaderKeyGen.jar!"
+    sudo wget "$LOADER_JAR_URL" -O "$BURP_DIR/BurpLoaderKeyGen.jar" -q --progress=bar:force || error_status "Failed to download BurpLoaderKeyGen.jar!"
 }
 
 generate_script() {
