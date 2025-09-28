@@ -25,29 +25,30 @@ Before proceeding with the installation, ensure that the following dependencies 
 
 - `git` - for version control
 - `curl` or `wget` - for downloading files
+- `jq` - for get version 
 
 ### Ubuntu/Debian-based Systems
 
 ```bash
-sudo apt-get install -y openjdk-22-jre openjdk-22-jdk git curl wget
+sudo apt-get install -y openjdk-22-jre openjdk-22-jdk git curl wget jq 
 ```
 
 ### Fedora-based Systems
 
 ```bash
-sudo dnf install -y java-22-openjdk java-22-openjdk-devel git curl wget
+sudo dnf install -y java-22-openjdk java-22-openjdk-devel git curl wget jq
 ```
 
 ### CentOS/RHEL-based Systems
 
 ```bash
-sudo yum install -y java-22-openjdk java-22-openjdk-devel git curl wget
+sudo yum install -y java-22-openjdk java-22-openjdk-devel git curl wget jq
 ```
 
 ### Arch-based Systems
 
 ```bash
-sudo pacman -S jdk-openjdk git curl wget
+sudo pacman -S jdk-openjdk git curl wget jq
 ```
 
 <img alt="prerequisites" src="https://raw.githubusercontent.com/crisa97/BurpSuiteLoaderGen/main/Media/prerequisites_linux.gif" width="500">
@@ -115,7 +116,7 @@ curl https://raw.githubusercontent.com/crisa97/BurpSuitePro/main/Linux/uninstall
 1. Change the directory:
 
 ```bash
-cd BurpSuitePro/Linux
+cd BurpSuitePro/
 ```
 
 2. Run the uninstallation script:
@@ -139,13 +140,27 @@ curl https://raw.githubusercontent.com/crisa97/BurpSuitePro/main/Linux/update.sh
 1. Change the directory:
 
 ```bash
-cd BurpSuitePro/Linux
+cd BurpSuitePro/
 ```
 
 2. Run the update script:
 
 ```bash
 sudo bash update.sh
+```
+
+### Manual Unistall
+
+1. Change the directory:
+
+```bash
+cd BurpSuitePro/
+```
+
+2. Run the unistall script:
+
+```bash
+sudo bash unistall.sh
 ```
 
 ![BurpSuiteProfessional](https://raw.githubusercontent.com/crisa97/BurpSuiteLoaderGen/main/Media/BurpSuitePro_1.png)
