@@ -54,12 +54,12 @@ EOF
 
 launch_burpsuite() {
     print_status "Launching Burp Suite Professional..."
-    "$BURP_SCRIPT" & sleep 10s || error_status "Failed to launch Burp Suite!"
+    "$BURP_SCRIPT"  > /dev/null 2>&1  > /dev/null 2>&1  > /dev/null 2>&1  > /dev/null 2>&1  > /dev/null 2>&1  > /dev/null 2>&1  > /dev/null 2>&1  > /dev/null 2>&1  > /dev/null 2>&1 & sleep 10s || error_status "Failed to launch Burp Suite!"
 }
 
 start_key_generator() {
     print_status "Starting Key Generator..."
-    java -jar "$BURP_DIR/BurpLoaderKeyGen.jar" || { error_status "Failed to start the Key Generator!"; exit 1; }
+    java -jar "$BURP_DIR/BurpLoaderKeyGen.jar" > /dev/null 2>&1 & disown || { error_status "Failed to start the Key Generator!"; exit 1; }
     print_status "Key Generator process has started. Follow the instructions to generate the key."
 }
 
