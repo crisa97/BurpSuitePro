@@ -8,10 +8,15 @@ print_status() {
     echo -e "\e[1;34m$1\e[0m"
 }
 
+error_status() {
+    echo -e "\e[1;31m$1\e[0m"
+    exit 1
+}
+
 remove_old_files() {
     print_status 'Removing Old Files...'
-    sudo rm -f "$BURP_DIR"/*.jar || { echo "Failed to remove old JAR files!"; exit 1; }
-    sudo rm -f "$BURP_SCRIPT" || { echo "Failed to remove old script!"; exit 1; }
+    sudo rm -f "$BURP_DIR"/*.jar || { error_status "Failed to remove old JAR files!"; exit 1; }
+    sudo rm -f "$BURP_SCRIPT" || { error_status "Failed to remove old script!"; exit 1; }
 }
 
 main () {

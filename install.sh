@@ -1,11 +1,9 @@
 #!/bin/bash
 
 # Variables
-REPO_URL="https://github.com/crisa97/BurpSuitePro.git"
 BURP_DIR="/usr/share/burpsuitepro"
-BURP_CLONE_DIR="$HOME/BurpSuitePro"
 BURP_SCRIPT="/usr/local/bin/burpsuitepro"
-BURP_RELEASES_URL="https://portswigger.net/burp/releases"
+BURP_RELEASES_URL="https://portswigger.net/burp/releases/data?pageSize=10"
 LOADER_JAR_URL="https://raw.githubusercontent.com/crisa97/BurpSuiteLoaderGen/main/BurpLoaderKeyGen.jar"
 
 print_status() {
@@ -17,28 +15,17 @@ error_status() {
     exit 1
 }
 
-cleanup_existing_dir() {
-    if [ -d "$BURP_CLONE_DIR" ]; then
-        print_status "Cleaning up existing directory $BURP_CLONE_DIR..."
-        rm -rf "$BURP_CLONE_DIR" || error_status "Cleanup failed!"
-    fi
-}
-
-clone_repo() {
-    print_status "Cloning the Burp Suite Professional repository..."
-    git clone "$REPO_URL" "$BURP_CLONE_DIR" || error_status "Cloning failed!"
-}
-
 download_burpsuite() {
     print_status "Downloading the latest Burp Suite Professional..."
     print_status "Please wait while we complete the process :)"
     local html version download_link
     sudo mkdir -p "$BURP_DIR" || error_status "Failed to make directory '$BURP_DIR'"
     html=$(curl -s "$BURP_RELEASES_URL")
-    version=$(echo "$html" | grep -Po '(?<=/burp/releases/professional-community-)[0-9]{4}\.[0-9]+\.[0-9]+' | head -n 1)
-    download_link="https://portswigger-cdn.net/burp/releases/download?product=pro&type=Jar&version=&"
+    version=$(echo "$html" | jq '.ResultSet.Results[] | select(.releaseChannels[] == "Stable") | .builds[] | select(.ProductId == "pro" and .ProductPlatform == "Linux")' | grep '"Version"' | awk -F'"' '{print $4}' | head -n1)
+    download_link="https://portswigger-cdn.net/burp/releases/download?product=pro&type=Jar&version=$version&"
+    echo "$version" > version.txt
     sudo wget "$download_link" -O "$BURP_DIR/burpsuite_pro.jar" -q --progress=bar:force || error_status "Download failed!"
-    print_status "Downloaded Burp Suite Version: $version"
+    print_status "Downloaded Burp Suite Version: $version" 
 }
 
 download_loader_jar() {
@@ -72,13 +59,11 @@ launch_burpsuite() {
 
 start_key_generator() {
     print_status "Starting Key Generator..."
-    java -jar "$BURP_DIR/BurpLoaderKeyGen.jar" || { echo "Failed to start the Key Generator!"; exit 1; }
+    java -jar "$BURP_DIR/BurpLoaderKeyGen.jar" || { error_status "Failed to start the Key Generator!"; exit 1; }
     print_status "Key Generator process has started. Follow the instructions to generate the key."
 }
 
 main() {
-    cleanup_existing_dir
-    clone_repo
     download_burpsuite
     download_loader_jar
     generate_script
