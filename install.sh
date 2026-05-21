@@ -21,7 +21,7 @@ download_burpsuite() {
     local html version download_link
     sudo mkdir -p "$BURP_DIR" || error_status "Failed to make directory '$BURP_DIR'"
     html=$(curl -s "$BURP_RELEASES_URL")
-    version=$(echo "$html" | jq -r '.ResultSet.Results[] | select(.releaseChannels[] == "Stable") | .builds[] | select(.BuildCategoryId == "pro" and .BuildCategoryPlatform == "Linux")' | grep '"Version"' | awk -F'"' '{print $4}' | head -n1)
+    version=$(echo "$html" | jq -r '.ResultSet.Results[] | select(.releaseChannels[] == "Stable") | .builds[] | select(.BuildCategoryPlatform == "Linux")' | grep '"Version"' | awk -F'"' '{print $4}' | head -n1)
     download_link="https://portswigger-cdn.net/burp/releases/download?product=pro&type=Jar&version=$version&"
     echo "$version" > version.txt
     sudo curl -L --fail --progress-bar  "$download_link" -o "$BURP_DIR/burpsuite_pro.jar"  || error_status "Download failed!"
