@@ -19,7 +19,7 @@ upgrad_burpsuite() {
     print_status 'Checking if there is a new version  ;'
     local html version download_link
     html=$(curl -s "$BURP_RELEASES_URL")
-    version=$(echo "$html" | jq -r '.ResultSet.Results[] | select(.releaseChannels[] == "Stable") | .builds[] | select(.BuildCategoryId == "pro" and .BuildCategoryPlatform == "Linux")' | grep '"Version"' | awk -F'"' '{print $4}' | head -n1)
+    version=$(echo "$html" | jq -r '.ResultSet.Results[] | select(.releaseChannels[] == "Stable") | .builds[] | select(.BuildCategoryPlatform == "Linux")' | grep '"Version"' | awk -F'"' '{print $4}' | head -n1)
     if [[ "$ACTUAL_VERSION" == "$version" ]]; then
         print_status 'BurpSuitePro in its latest version.';  exit 1;
     else 
