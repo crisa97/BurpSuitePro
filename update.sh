@@ -25,7 +25,7 @@ upgrad_burpsuite() {
     else 
         print_status 'Upgrading Burp Suite Professional...'
         print_status "Please wait while we complete the process :)"
-        download_link="https://portswigger.net/burp/releases/download?product=desktop&version=$version&"
+        download_link="https://portswigger.net/burp/releases/download?product=desktop&version=$version&type=Jar"
         echo "$version" > version.txt
         sudo curl -L --fail --progress-bar  "$download_link" -o "$BURP_DIR/burpsuite_pro.jar&type=Jar"  || error_status "Download failed!"
         print_status "Burp Suite successfully updated :D"
