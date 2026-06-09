@@ -1,0 +1,4 @@
+curl -s  'https://portswigger.net/burp/releases/data?pageSize=10' | jq '.ResultSet.Results[] | select(.releaseChannels[] == "Stable") | .builds[] | select(.ProductId == "pro" and .ProductPlatform == "Linux")' | grep '"Version"' | awk -F'"' '{print $4}' | head -n1 > version.txt
+
+curl -s  'https://portswigger.net/burp/releases/data?pageSize=10' | jq -r '.ResultSet.Results[] | select(.releaseChannels[] == "Stable")' | grep '"Version"' | awk -F'"' '{print $4}' | head -n 1 >  version.txt
+

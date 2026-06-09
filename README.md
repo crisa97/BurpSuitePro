@@ -60,7 +60,7 @@ sudo pacman -S jdk-openjdk git curl wget jq
 To install Burp Suite Professional, run the following command (root user):
 
 ```bash
-curl https://raw.githubusercontent.com/crisa97/BurpSuitePro/main/Linux/install.sh | sudo bash
+curl https://raw.githubusercontent.com/crisa97/BurpSuitePro/main/install.sh | sudo bash
 ```
 
 Note: Make sure to enter your password after running this command as it is executed with root privileges.
@@ -80,7 +80,7 @@ git clone https://github.com/crisa97/BurpSuitePro.git
 2. Change the directory:
 
 ```bash
-cd BurpSuitePro/Linux
+cd BurpSuitePro
 ```
 
 3. Run the installation script:
@@ -106,7 +106,7 @@ burpsuitepro
 To uninstall Burp Suite Professional, run the following command (root user):
 
 ```bash
-curl https://raw.githubusercontent.com/crisa97/BurpSuitePro/main/Linux/uninstall.sh | sudo bash
+curl https://raw.githubusercontent.com/crisa97/BurpSuitePro/main/uninstall.sh | sudo bash
 ```
 
 <img alt="uninstallation" src="https://raw.githubusercontent.com/crisa97/BurpSuiteLoaderGen/main/Media/uninstallation_linux.gif" width="500">
@@ -132,7 +132,7 @@ sudo bash uninstall.sh
 To update Burp Suite Professional, run the following command (root user):
 
 ```bash
-curl https://raw.githubusercontent.com/crisa97/BurpSuitePro/main/Linux/update.sh | sudo bash
+curl https://raw.githubusercontent.com/crisa97/BurpSuitePro/main/update.sh | sudo bash
 ```
 
 ### Manual Update
@@ -149,7 +149,7 @@ cd BurpSuitePro/
 sudo bash update.sh
 ```
 
-### Manual Unistall
+### Manual Uninstall
 
 1. Change the directory:
 
@@ -157,10 +157,10 @@ sudo bash update.sh
 cd BurpSuitePro/
 ```
 
-2. Run the unistall script:
+2. Run the uninstall script:
 
 ```bash
-sudo bash unistall.sh
+sudo bash uninstall.sh
 ```
 
 ![BurpSuiteProfessional](https://raw.githubusercontent.com/crisa97/BurpSuiteLoaderGen/main/Media/BurpSuitePro_1.png)

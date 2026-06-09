@@ -2,7 +2,7 @@
 
 # Variables
 BURP_DIR="/usr/share/burpsuitepro"
-BURP_SCRIPT="burpsuitepro"
+BURP_SCRIPT="/usr/local/bin/burpsuitepro"
 BURP_RELEASES_URL="https://portswigger.net/burp/releases/data?pageSize=10"
 ACTUAL_VERSION=$(< version.txt)
 
@@ -20,6 +20,7 @@ upgrad_burpsuite() {
     local html version download_link
     html=$(curl -s "$BURP_RELEASES_URL")
     version=$(echo "$html" | jq -r '[.ResultSet.Results[] | select(.releaseChannels[] == "Stable" and (.categories | index("DAST") | not))] | first | .version')
+    [[ -n "$version" && "$version" != "null" ]] || error_status "No se pudo obtener la versión desde la API"
     if [[ "$ACTUAL_VERSION" == "$version" ]]; then
         print_status 'BurpSuitePro in its latest version.';  exit 0;
     else 

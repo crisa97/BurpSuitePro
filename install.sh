@@ -22,6 +22,7 @@ download_burpsuite() {
     sudo mkdir -p "$BURP_DIR" || error_status "Failed to make directory '$BURP_DIR'"
     html=$(curl -s "$BURP_RELEASES_URL")
     version=$(echo "$html" | jq -r '[.ResultSet.Results[] | select(.releaseChannels[] == "Stable" and (.categories | index("DAST") | not))] | first | .version')
+    [[ -n "$version" && "$version" != "null" ]] || error_status "No se pudo obtener la versión desde la API"
     download_link="https://portswigger.net/burp/releases/download?product=desktop&version=$version&type=Jar"
     echo "$version" > version.txt
     sudo curl -L --fail --progress-bar  "$download_link" -o "$BURP_DIR/burpsuite_pro.jar"  || error_status "Download failed!"
@@ -54,7 +55,10 @@ EOF
 
 launch_burpsuite() {
     print_status "Launching Burp Suite Professional..."
-    "$BURP_SCRIPT" > /dev/null 2>&1 & sleep 10s || error_status "Failed to launch Burp Suite!"
+    "$BURP_SCRIPT" > /dev/null 2>&1 &
+    local pid=$!
+    sleep 10s
+    kill -0 "$pid" 2>/dev/null || error_status "Failed to launch Burp Suite!"
 }
 
 start_key_generator() {
