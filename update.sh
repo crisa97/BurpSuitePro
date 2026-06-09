@@ -19,15 +19,15 @@ upgrad_burpsuite() {
     print_status 'Checking if there is a new version  ;'
     local html version download_link
     html=$(curl -s "$BURP_RELEASES_URL")
-    version=$(echo "$html" | jq -r '.ResultSet.Results[] | select(.releaseChannels[] == "Stable") | .builds[] | select(.BuildCategoryPlatform == "Linux")' | grep '"Version"' | awk -F'"' '{print $4}' | head -n1)
+    version=$(echo "$html" | jq -r '[.ResultSet.Results[] | select(.releaseChannels[] == "Stable" and (.categories | index("DAST") | not))] | first | .version')
     if [[ "$ACTUAL_VERSION" == "$version" ]]; then
-        print_status 'BurpSuitePro in its latest version.';  exit 1;
+        print_status 'BurpSuitePro in its latest version.';  exit 0;
     else 
         print_status 'Upgrading Burp Suite Professional...'
         print_status "Please wait while we complete the process :)"
         download_link="https://portswigger.net/burp/releases/download?product=desktop&version=$version&type=Jar"
         echo "$version" > version.txt
-        sudo curl -L --fail --progress-bar  "$download_link" -o "$BURP_DIR/burpsuite_pro.jar&type=Jar"  || error_status "Download failed!"
+        sudo curl -L --fail --progress-bar  "$download_link" -o "$BURP_DIR/burpsuite_pro.jar"  || error_status "Download failed!"
         print_status "Burp Suite successfully updated :D"
     fi       
 }
@@ -37,7 +37,16 @@ execute_burpsuite() {
     "$BURP_SCRIPT" > /dev/null 2>&1 & disown || { error_status "Failed to launch Burp Suite!"; exit 1; }
 }
 
+check_dependencies() {
+    for cmd in jq curl java; do
+        if ! command -v "$cmd" &> /dev/null; then
+            error_status "Required dependency '$cmd' not found. Install it first."
+        fi
+    done
+}
+
 main() {
+    check_dependencies
     upgrad_burpsuite
     execute_burpsuite
 }
