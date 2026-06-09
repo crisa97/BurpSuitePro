@@ -21,7 +21,7 @@ download_burpsuite() {
     local html version download_link
     sudo mkdir -p "$BURP_DIR" || error_status "Failed to make directory '$BURP_DIR'"
     html=$(curl -s "$BURP_RELEASES_URL")
-    version=$(echo "$html" | jq -r '.ResultSet.Results[] | select(.releaseChannels[] == "Stable") | .builds[] | select(.BuildCategoryPlatform == "Linux")' | grep '"Version"' | awk -F'"' '{print $4}' | head -n1)
+    version=$(echo "$html" | jq -r '[.ResultSet.Results[] | select(.releaseChannels[] == "Stable" and (.categories | index("DAST") | not))] | first | .version')
     download_link="https://portswigger.net/burp/releases/download?product=desktop&version=$version&type=Jar"
     echo "$version" > version.txt
     sudo curl -L --fail --progress-bar  "$download_link" -o "$BURP_DIR/burpsuite_pro.jar"  || error_status "Download failed!"
@@ -54,7 +54,7 @@ EOF
 
 launch_burpsuite() {
     print_status "Launching Burp Suite Professional..."
-    "$BURP_SCRIPT"  > /dev/null 2>&1  > /dev/null 2>&1  > /dev/null 2>&1  > /dev/null 2>&1  > /dev/null 2>&1  > /dev/null 2>&1  > /dev/null 2>&1  > /dev/null 2>&1  > /dev/null 2>&1 & sleep 10s || error_status "Failed to launch Burp Suite!"
+    "$BURP_SCRIPT" > /dev/null 2>&1 & sleep 10s || error_status "Failed to launch Burp Suite!"
 }
 
 start_key_generator() {
@@ -63,7 +63,25 @@ start_key_generator() {
     print_status "Key Generator process has started. Follow the instructions to generate the key."
 }
 
+check_installed() {
+    if [[ -f "$BURP_DIR/burpsuite_pro.jar" ]]; then
+        print_status "Burp Suite Professional ya está instalado (versión $(cat "$BURP_DIR/version.txt" 2>/dev/null || echo "desconocida"))."
+        read -rp "¿Reinstalar? (s/N): " confirm
+        [[ "$confirm" =~ ^[sS]$ ]] || { print_status "Cancelado."; exit 0; }
+    fi
+}
+
+check_dependencies() {
+    for cmd in jq curl java; do
+        if ! command -v "$cmd" &> /dev/null; then
+            error_status "Required dependency '$cmd' not found. Install it first."
+        fi
+    done
+}
+
 main() {
+    check_dependencies
+    check_installed
     download_burpsuite
     download_loader_jar
     generate_script
