@@ -69,7 +69,7 @@ start_key_generator() {
 
 check_installed() {
     if [[ -f "$BURP_DIR/burpsuite_pro.jar" ]]; then
-        print_status "Burp Suite Professional ya está instalado (versión $(cat "$BURP_DIR/version.txt" 2>/dev/null || echo "desconocida"))."
+        print_status "Burp Suite Professional ya está instalado (versión $(cat version.txt 2>/dev/null || cat "$BURP_DIR/version.txt" 2>/dev/null || echo "desconocida"))."
         read -rp "¿Reinstalar? (s/N): " confirm
         [[ "$confirm" =~ ^[sS]$ ]] || { print_status "Cancelado."; exit 0; }
     fi
